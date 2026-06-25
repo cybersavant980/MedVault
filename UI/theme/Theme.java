@@ -72,7 +72,6 @@ public final class Theme {
     public static final int BUTTON_HEIGHT = 42;
     public static final int BUTTON_RADIUS = 18;
     public static final int BUTTON_WIDTH = 140;
-    setPreferredSize(new Dimension(Theme.BUTTON_WIDTH,Theme.BUTTON_HEIGHT));
 
     public static final int TEXTFIELD_HEIGHT = 42;
     public static final int TEXTFIELD_RADIUS = 16;

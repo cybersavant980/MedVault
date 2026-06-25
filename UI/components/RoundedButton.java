@@ -32,7 +32,8 @@ public class RoundedButton extends JButton {
 
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        setPreferredSize(new Dimension(140, Theme.BUTTON_HEIGHT));
+        //setPreferredSize(new Dimension(140, Theme.BUTTON_HEIGHT));
+        setPreferredSize(new Dimension(Theme.BUTTON_WIDTH,Theme.BUTTON_HEIGHT));
     }
 
     @Override
