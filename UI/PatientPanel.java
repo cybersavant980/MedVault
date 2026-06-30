@@ -2,7 +2,9 @@ package UI;
 
 import UI.components.*;
 import UI.theme.Theme;
-
+import DSA.managers.PatientManager;
+import DSA.models.Patient;
+import DSA.util.Validation;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -54,7 +56,7 @@ public class PatientPanel extends JPanel {
     // =====================================================
 
     private AppTable patientTable;
-
+    private PatientManager patientManager;
     // =====================================================
     // Status
     // =====================================================
@@ -68,9 +70,13 @@ public class PatientPanel extends JPanel {
 
     public PatientPanel() {
 
+        patientManager = new PatientManager();
+
         initializeComponents();
         layoutComponents();
         registerEvents();
+
+        loadPatientTable();
 
     }
 
@@ -412,7 +418,7 @@ public class PatientPanel extends JPanel {
 
         clearButton.addActionListener(e -> clearForm());
 
-        refreshButton.addActionListener(e -> loadTable());
+        refreshButton.addActionListener(e -> loadPatientTable());
 
         detailsButton.addActionListener(e -> viewPatientDetails());
 
@@ -424,29 +430,313 @@ public class PatientPanel extends JPanel {
 
     private void addPatient() {
 
-        MessageDialog.showInfo(this,
-                "PatientManager integration coming next.");
+        String patientId = patientIdField.getText().trim();
+        String fullName = patientNameField.getText().trim();
+
+        String ageText = ageField.getText().trim();
+
+        String gender = genderComboBox.getSelectedItem().toString();
+        String bloodGroup = bloodGroupComboBox.getSelectedItem().toString();
+
+        String disease = diseaseField.getText().trim();
+        String phone = phoneField.getText().trim();
+        String email = emailField.getText().trim();
+        String address = addressField.getText().trim();
+
+        String emergencyContact =
+                emergencyContactField.getText().trim();
+
+        String emergencyPhone =
+                emergencyPhoneField.getText().trim();
+
+        // ===========================================
+        // Validation
+        // ===========================================
+
+        if (Validation.isEmpty(patientId)
+                || Validation.isEmpty(fullName)
+                || Validation.isEmpty(ageText)
+                || Validation.isEmpty(phone)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Please fill all required fields.");
+
+            return;
+        }
+
+        int age;
+
+        try {
+
+            age = Integer.parseInt(ageText);
+
+        } catch (NumberFormatException ex) {
+
+            MessageDialog.showError(
+                    this,
+                    "Age must be numeric.");
+
+            return;
+
+        }
+
+        if (!Validation.isValidAge(age)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Invalid age.");
+
+            return;
+
+        }
+
+        if (!Validation.isValidPhone(phone)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Invalid phone number.");
+
+            return;
+
+        }
+
+        if (!email.isEmpty()
+                && !Validation.isValidEmail(email)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Invalid email address.");
+
+            return;
+
+        }
+
+        // ===========================================
+        // Create Patient Object
+        // ===========================================
+
+        Patient patient = new Patient(
+
+                patientId,
+                fullName,
+                age,
+                gender,
+                bloodGroup,
+                phone,
+                email,
+                address,
+                emergencyContact,
+                emergencyPhone,
+                disease,
+                ""
+
+        );
+
+        // ===========================================
+        // Save Patient
+        // ===========================================
+
+        boolean added =
+                patientManager.addPatient(patient);
+
+        if (added) {
+
+            MessageDialog.showSuccess(
+                    this,
+                    "Patient added successfully.");
+
+            clearForm();
+
+            loadPatientTable();
+
+        } else {
+
+            MessageDialog.showError(
+                    this,
+                    "Patient ID already exists.");
+
+        }
 
     }
 
     private void updatePatient() {
 
-        MessageDialog.showInfo(this,
-                "Patient update module coming next.");
+        String patientId = patientIdField.getText().trim();
+
+        if (Validation.isEmpty(patientId)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Enter Patient ID to update.");
+
+            return;
+
+        }
+
+        Patient existingPatient =
+                patientManager.getPatient(patientId);
+
+        if (existingPatient == null) {
+
+            MessageDialog.showError(
+                    this,
+                    "Patient not found.");
+
+            return;
+
+        }
+
+        String fullName = patientNameField.getText().trim();
+        String ageText = ageField.getText().trim();
+
+        int age;
+
+        try {
+
+            age = Integer.parseInt(ageText);
+
+        } catch (NumberFormatException ex) {
+
+            MessageDialog.showError(
+                    this,
+                    "Age must be numeric.");
+
+            return;
+
+        }
+
+        existingPatient.setFullName(fullName);
+        existingPatient.setAge(age);
+        existingPatient.setGender(
+                genderComboBox.getSelectedItem().toString());
+
+        existingPatient.setBloodGroup(
+                bloodGroupComboBox.getSelectedItem().toString());
+
+        existingPatient.setCurrentDisease(
+                diseaseField.getText().trim());
+
+        existingPatient.setPhoneNumber(
+                phoneField.getText().trim());
+
+        existingPatient.setEmail(
+                emailField.getText().trim());
+
+        existingPatient.setAddress(
+                addressField.getText().trim());
+
+        existingPatient.setEmergencyContactName(
+                emergencyContactField.getText().trim());
+
+        existingPatient.setEmergencyContactPhone(
+                emergencyPhoneField.getText().trim());
+
+        if (patientManager.updatePatient(existingPatient)) {
+
+            MessageDialog.showSuccess(
+                    this,
+                    "Patient updated successfully.");
+
+            loadPatientTable();
+
+            clearForm();
+
+        } else {
+
+            MessageDialog.showError(
+                    this,
+                    "Unable to update patient.");
+
+        }
 
     }
 
     private void deletePatient() {
 
-        MessageDialog.showInfo(this,
-                "Patient delete module coming next.");
+        String patientId = patientIdField.getText().trim();
+
+        if (Validation.isEmpty(patientId)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Enter Patient ID to delete.");
+
+            return;
+
+        }
+
+        boolean confirm = MessageDialog.showConfirm(
+                this,
+                "Are you sure you want to delete this patient?");
+
+        if (!confirm) {
+            return;
+        }
+
+        boolean deleted =
+                patientManager.deletePatient(patientId);
+
+        if (deleted) {
+
+            MessageDialog.showSuccess(
+                    this,
+                    "Patient deleted successfully.");
+
+            clearForm();
+
+            loadPatientTable();
+
+        } else {
+
+            MessageDialog.showError(
+                    this,
+                    "Patient not found.");
+
+        }
 
     }
 
     private void viewPatientDetails() {
 
-        MessageDialog.showInfo(this,
-                "Patient details module coming next.");
+        String patientId = patientIdField.getText().trim();
+
+        if (Validation.isEmpty(patientId)) {
+
+            MessageDialog.showError(
+                    this,
+                    "Enter Patient ID.");
+
+            return;
+
+        }
+
+        Patient patient = patientManager.getPatient(patientId);
+
+        if (patient == null) {
+
+            MessageDialog.showError(
+                    this,
+                    "Patient not found.");
+
+            return;
+
+        }
+
+        String details =
+                "Patient ID : " + patient.getPatientId() +
+                "\nName : " + patient.getFullName() +
+                "\nAge : " + patient.getAge() +
+                "\nGender : " + patient.getGender() +
+                "\nBlood Group : " + patient.getBloodGroup() +
+                "\nDisease : " + patient.getCurrentDisease() +
+                "\nPhone : " + patient.getPhoneNumber() +
+                "\nEmail : " + patient.getEmail() +
+                "\nAddress : " + patient.getAddress() +
+                "\nEmergency Contact : " + patient.getEmergencyContactName() +
+                "\nEmergency Phone : " + patient.getEmergencyContactPhone();
+
+        MessageDialog.showInfo(this, details);
 
     }
 
@@ -475,9 +765,46 @@ public class PatientPanel extends JPanel {
 
     }
 
-    private void loadTable() {
+    private void loadPatientTable() {
 
-        statusLabel.setText("Status : Table Refreshed");
+        String[] columns = {
+
+                "Patient ID",
+                "Name",
+                "Age",
+                "Gender",
+                "Blood Group",
+                "Disease",
+                "Phone"
+
+        };
+
+        java.util.List<Patient> patients =
+                patientManager.getAllPatients();
+
+        Object[][] data = new Object[patients.size()][7];
+
+        for (int i = 0; i < patients.size(); i++) {
+
+            Patient patient = patients.get(i);
+
+            data[i][0] = patient.getPatientId();
+            data[i][1] = patient.getFullName();
+            data[i][2] = patient.getAge();
+            data[i][3] = patient.getGender();
+            data[i][4] = patient.getBloodGroup();
+            data[i][5] = patient.getCurrentDisease();
+            data[i][6] = patient.getPhoneNumber();
+
+        }
+
+        patientTable.setTableData(columns, data);
+
+        totalPatientsLabel.setText(
+                "Total Patients : " + patients.size());
+
+        statusLabel.setText(
+                "Status : " + patients.size() + " patient(s) loaded");
 
     }
 

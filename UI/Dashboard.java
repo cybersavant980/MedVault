@@ -2,7 +2,9 @@ package UI;
 
 import UI.components.DashboardCard;
 import UI.theme.Theme;
-
+import DSA.managers.PatientManager;
+import DSA.managers.MedicineManager;
+import DSA.managers.ReminderScheduler;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -13,10 +15,20 @@ public class Dashboard extends JPanel {
     private DashboardCard medicineCard;
     private DashboardCard reminderCard;
     private DashboardCard emergencyCard;
-
+    private PatientManager patientManager;
+    private MedicineManager medicineManager;
+    private ReminderScheduler reminderScheduler;
     public Dashboard() {
+
+        patientManager = new PatientManager();
+        medicineManager = new MedicineManager();
+        reminderScheduler = new ReminderScheduler();
+
         initializeComponents();
         layoutComponents();
+
+        refreshDashboard();
+
     }
 
     private void initializeComponents() {
@@ -42,7 +54,7 @@ public class Dashboard extends JPanel {
         title.setFont(Theme.TITLE_FONT);
         title.setForeground(Theme.TEXT_PRIMARY);
 
-        JLabel subtitle = new JLabel("Welcome to THE_PROJECT");
+        JLabel subtitle = new JLabel("Welcome to MedVault - Offline Home Medical Record & Emergency Management System");
         subtitle.setFont(Theme.SUBTITLE_FONT);
         subtitle.setForeground(Theme.TEXT_SECONDARY);
 
@@ -111,5 +123,21 @@ public class Dashboard extends JPanel {
 
     public void setEmergencyCount(int count) {
         emergencyCard.setValue(String.valueOf(count));
+    }
+
+    public void refreshDashboard() {
+
+        setPatientCount(
+                patientManager.getPatientCount());
+
+        setMedicineCount(
+                medicineManager.getMedicineCount());
+
+        setReminderCount(
+                reminderScheduler.getReminderCount());
+
+        setEmergencyCount(
+                patientManager.getPatientCount());
+
     }
 }

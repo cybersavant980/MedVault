@@ -1,20 +1,678 @@
 package UI;
 
+import DSA.managers.MedicineManager;
+import DSA.models.Medicine;
+
+import UI.components.*;
+import UI.theme.Theme;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MedicinePanel extends JPanel {
 
+    // =====================================================
+    // Manager
+    // =====================================================
+
+    private MedicineManager medicineManager;
+
+    // =====================================================
+    // Header
+    // =====================================================
+
+    private JLabel titleLabel;
+    private JLabel subtitleLabel;
+
+    // =====================================================
+    // Search
+    // =====================================================
+
+    private SearchBar searchBar;
+
+    // =====================================================
+    // Form Fields
+    // =====================================================
+
+    private RoundedTextField medicineIdField;
+    private RoundedTextField medicineNameField;
+    private RoundedTextField genericNameField;
+    private RoundedTextField manufacturerField;
+
+    private RoundedTextField dosageField;
+    private RoundedTextField frequencyField;
+    private RoundedTextField intakeTimeField;
+
+    private RoundedTextField stockField;
+    private RoundedTextField minimumStockField;
+
+    private RoundedTextField prescribedForField;
+    private RoundedTextField prescribedByField;
+
+    private RoundedTextField expiryDateField;
+
+    // =====================================================
+    // Buttons
+    // =====================================================
+
+    private RoundedButton addButton;
+    private RoundedButton updateButton;
+    private RoundedButton deleteButton;
+    private RoundedButton clearButton;
+    private RoundedButton refreshButton;
+    private RoundedButton detailsButton;
+
+    // =====================================================
+    // Table
+    // =====================================================
+
+    private AppTable medicineTable;
+
+    // =====================================================
+    // Status
+    // =====================================================
+
+    private JLabel statusLabel;
+    private JLabel totalMedicineLabel;
+
     public MedicinePanel() {
 
-        setLayout(new BorderLayout());
+        medicineManager = new MedicineManager();
 
-        JLabel label = new JLabel(
-                "Medicine Module - Under Development",
-                SwingConstants.CENTER);
+        initializeComponents();
+        layoutComponents();
+        registerEvents();
 
-        add(label, BorderLayout.CENTER);
+        loadMedicineTable();
 
     }
+
+    private void initializeComponents() {
+
+        titleLabel = new JLabel("Medicine Management");
+        titleLabel.setFont(Theme.TITLE_FONT);
+        titleLabel.setForeground(Theme.TEXT_PRIMARY);
+
+        subtitleLabel = new JLabel("Manage medicines and prescriptions");
+        subtitleLabel.setFont(Theme.SUBTITLE_FONT);
+        subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
+
+        searchBar = new SearchBar();
+
+        medicineIdField = new RoundedTextField(20);
+        medicineNameField = new RoundedTextField(20);
+        genericNameField = new RoundedTextField(20);
+        manufacturerField = new RoundedTextField(20);
+
+        dosageField = new RoundedTextField(20);
+        frequencyField = new RoundedTextField(20);
+        intakeTimeField = new RoundedTextField(20);
+
+        stockField = new RoundedTextField(20);
+        minimumStockField = new RoundedTextField(20);
+
+        prescribedForField = new RoundedTextField(20);
+        prescribedByField = new RoundedTextField(20);
+
+        expiryDateField = new RoundedTextField(20);
+
+        addButton = new RoundedButton("Add");
+        updateButton = new RoundedButton("Update");
+        deleteButton = new RoundedButton("Delete");
+        clearButton = new RoundedButton("Clear");
+        refreshButton = new RoundedButton("Refresh");
+        detailsButton = new RoundedButton("View Details");
+
+        medicineTable = new AppTable();
+
+        statusLabel = new JLabel("Status : Ready");
+        statusLabel.setFont(Theme.BODY_FONT);
+
+        totalMedicineLabel = new JLabel("Total Medicines : 0");
+        totalMedicineLabel.setFont(Theme.BODY_FONT);
+
+    }
+
+    private void layoutComponents() {
+
+        setLayout(new BorderLayout(15, 15));
+        setBackground(Theme.BACKGROUND);
+
+        add(createHeaderPanel(), BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new BorderLayout(15, 15));
+        centerPanel.setOpaque(false);
+
+        JPanel topPanel = new JPanel(new BorderLayout(15, 15));
+        topPanel.setOpaque(false);
+
+        topPanel.add(createSearchPanel(), BorderLayout.NORTH);
+        topPanel.add(createFormPanel(), BorderLayout.CENTER);
+
+        centerPanel.add(topPanel, BorderLayout.NORTH);
+        centerPanel.add(createButtonPanel(), BorderLayout.CENTER);
+        centerPanel.add(createTablePanel(), BorderLayout.SOUTH);
+
+        add(centerPanel, BorderLayout.CENTER);
+        add(createStatusPanel(), BorderLayout.SOUTH);
+
+    }
+
+    private JPanel createHeaderPanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createVerticalStrut(5));
+        titlePanel.add(subtitleLabel);
+
+        panel.add(titlePanel, BorderLayout.WEST);
+
+        return panel;
+
+    }
+
+    private JPanel createSearchPanel() {
+
+        RoundedPanel panel = new RoundedPanel();
+
+        panel.setLayout(new BorderLayout(10, 10));
+
+        JLabel label = new JLabel("Search Medicine");
+        label.setFont(Theme.HEADER_FONT);
+
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(searchBar, BorderLayout.CENTER);
+
+        return panel;
+
+    }
+
+    private JPanel createFormPanel() {
+
+        RoundedPanel panel = new RoundedPanel();
+        panel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
+
+        // =====================================================
+        // Row 1
+        // =====================================================
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(new JLabel("Medicine ID"), gbc);
+
+        gbc.gridx = 1;
+        panel.add(new JLabel("Medicine Name"), gbc);
+
+        gbc.gridx = 2;
+        panel.add(new JLabel("Generic Name"), gbc);
+
+        gbc.gridx = 3;
+        panel.add(new JLabel("Manufacturer"), gbc);
+
+        gbc.gridy++;
+
+        gbc.gridx = 0;
+        panel.add(medicineIdField, gbc);
+
+        gbc.gridx = 1;
+        panel.add(medicineNameField, gbc);
+
+        gbc.gridx = 2;
+        panel.add(genericNameField, gbc);
+
+        gbc.gridx = 3;
+        panel.add(manufacturerField, gbc);
+
+        // =====================================================
+        // Row 2
+        // =====================================================
+
+        gbc.gridy++;
+
+        gbc.gridx = 0;
+        panel.add(new JLabel("Dosage"), gbc);
+
+        gbc.gridx = 1;
+        panel.add(new JLabel("Frequency"), gbc);
+
+        gbc.gridx = 2;
+        panel.add(new JLabel("Intake Time"), gbc);
+
+        gbc.gridx = 3;
+        panel.add(new JLabel("Expiry Date"), gbc);
+
+        gbc.gridy++;
+
+        gbc.gridx = 0;
+        panel.add(dosageField, gbc);
+
+        gbc.gridx = 1;
+        panel.add(frequencyField, gbc);
+
+        gbc.gridx = 2;
+        panel.add(intakeTimeField, gbc);
+
+        gbc.gridx = 3;
+        panel.add(expiryDateField, gbc);
+
+        // =====================================================
+        // Row 3
+        // =====================================================
+
+        gbc.gridy++;
+
+        gbc.gridx = 0;
+        panel.add(new JLabel("Stock Quantity"), gbc);
+
+        gbc.gridx = 1;
+        panel.add(new JLabel("Minimum Stock"), gbc);
+
+        gbc.gridx = 2;
+        panel.add(new JLabel("Prescribed For"), gbc);
+
+        gbc.gridx = 3;
+        panel.add(new JLabel("Prescribed By"), gbc);
+
+        gbc.gridy++;
+
+        gbc.gridx = 0;
+        panel.add(stockField, gbc);
+
+        gbc.gridx = 1;
+        panel.add(minimumStockField, gbc);
+
+        gbc.gridx = 2;
+        panel.add(prescribedForField, gbc);
+
+        gbc.gridx = 3;
+        panel.add(prescribedByField, gbc);
+
+        return panel;
+
+    }
+
+    private JPanel createButtonPanel() {
+
+        JPanel panel = new JPanel(
+                new FlowLayout(
+                        FlowLayout.CENTER,
+                        15,
+                        10));
+
+        panel.setOpaque(false);
+
+        panel.add(addButton);
+        panel.add(updateButton);
+        panel.add(deleteButton);
+        panel.add(clearButton);
+        panel.add(refreshButton);
+        panel.add(detailsButton);
+
+        return panel;
+
+    }
+
+    private JPanel createTablePanel() {
+
+        RoundedPanel panel = new RoundedPanel();
+
+        panel.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("Medicine Records");
+        title.setFont(Theme.HEADER_FONT);
+
+        panel.add(title, BorderLayout.NORTH);
+
+        String[] columns = {
+
+                "Medicine ID",
+                "Medicine Name",
+                "Dosage",
+                "Frequency",
+                "Expiry",
+                "Stock"
+
+        };
+
+        medicineTable.setTableData(columns, new Object[][] {});
+
+        JScrollPane scrollPane =
+                new JScrollPane(medicineTable);
+
+        scrollPane.setBorder(
+                BorderFactory.createEmptyBorder());
+
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+
+    }
+
+    private JPanel createStatusPanel() {
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.setOpaque(false);
+
+        statusLabel.setForeground(Theme.TEXT_SECONDARY);
+        totalMedicineLabel.setForeground(Theme.TEXT_SECONDARY);
+
+        panel.add(statusLabel, BorderLayout.WEST);
+        panel.add(totalMedicineLabel, BorderLayout.EAST);
+
+        return panel;
+
+    }
+
+    // =====================================================
+    // Event Registration
+    // =====================================================
+
+    private void registerEvents() {
+
+        addButton.addActionListener(e -> addMedicine());
+
+        updateButton.addActionListener(e -> updateMedicine());
+
+        deleteButton.addActionListener(e -> deleteMedicine());
+
+        clearButton.addActionListener(e -> clearForm());
+
+        refreshButton.addActionListener(e -> loadMedicineTable());
+
+        detailsButton.addActionListener(e -> viewMedicineDetails());
+
+    }
+
+    // =====================================================
+    // Load Table
+    // =====================================================
+
+    private void loadMedicineTable() {
+
+        String[] columns = {
+
+                "Medicine ID",
+                "Medicine Name",
+                "Dosage",
+                "Frequency",
+                "Expiry",
+                "Stock"
+
+        };
+
+        java.util.List<Medicine> medicines =
+                medicineManager.getAllMedicines();
+
+        Object[][] data = new Object[medicines.size()][6];
+
+        for (int i = 0; i < medicines.size(); i++) {
+
+            Medicine medicine = medicines.get(i);
+
+            data[i][0] = medicine.getMedicineId();
+            data[i][1] = medicine.getMedicineName();
+            data[i][2] = medicine.getDosage();
+            data[i][3] = medicine.getFrequency();
+            data[i][4] = medicine.getExpiryDate();
+            data[i][5] = medicine.getStockQuantity();
+
+        }
+
+        medicineTable.setTableData(columns, data);
+
+        totalMedicineLabel.setText(
+                "Total Medicines : " + medicines.size());
+
+        statusLabel.setText(
+                "Status : " + medicines.size() + " medicine(s) loaded");
+
+    }
+
+
+    // =====================================================
+    // Add Medicine
+    // =====================================================
+
+    private void addMedicine() {
+
+        try {
+
+            String medicineId = medicineIdField.getText().trim();
+            String medicineName = medicineNameField.getText().trim();
+            String genericName = genericNameField.getText().trim();
+            String manufacturer = manufacturerField.getText().trim();
+
+            String dosage = dosageField.getText().trim();
+            String frequency = frequencyField.getText().trim();
+
+            java.time.LocalTime intakeTime =
+                    java.time.LocalTime.parse(
+                            intakeTimeField.getText().trim());
+
+            int stock =
+                    Integer.parseInt(stockField.getText().trim());
+
+            int minimumStock =
+                    Integer.parseInt(
+                            minimumStockField.getText().trim());
+
+            String prescribedFor =
+                    prescribedForField.getText().trim();
+
+            String prescribedBy =
+                    prescribedByField.getText().trim();
+
+            java.time.LocalDate expiryDate =
+                    java.time.LocalDate.parse(
+                            expiryDateField.getText().trim());
+
+            Medicine medicine = new Medicine(
+
+                    medicineId,
+                    medicineName,
+                    genericName,
+                    manufacturer,
+                    dosage,
+                    frequency,
+                    intakeTime,
+                    stock,
+                    minimumStock,
+                    prescribedFor,
+                    prescribedBy,
+                    expiryDate
+
+            );
+
+            if (medicineManager.addMedicine(medicine)) {
+
+                MessageDialog.showSuccess(
+                        this,
+                        "Medicine added successfully.");
+
+                loadMedicineTable();
+
+                clearForm();
+
+            } else {
+
+                MessageDialog.showError(
+                        this,
+                        "Medicine ID already exists.");
+
+            }
+
+        } catch (Exception ex) {
+
+            MessageDialog.showError(
+                    this,
+                    "Invalid medicine information.");
+
+        }
+
+    }
+
+    // =====================================================
+    // Update Medicine
+    // =====================================================
+
+    private void updateMedicine() {
+
+        try {
+
+            String medicineId =
+                    medicineIdField.getText().trim();
+
+            Medicine medicine =
+                    medicineManager.getMedicine(medicineId);
+
+            if (medicine == null) {
+
+                MessageDialog.showError(
+                        this,
+                        "Medicine not found.");
+
+                return;
+
+            }
+
+            medicine.setMedicineName(
+                    medicineNameField.getText().trim());
+
+            medicine.setGenericName(
+                    genericNameField.getText().trim());
+
+            medicine.setManufacturer(
+                    manufacturerField.getText().trim());
+
+            medicine.setDosage(
+                    dosageField.getText().trim());
+
+            medicine.setFrequency(
+                    frequencyField.getText().trim());
+
+            medicine.setIntakeTime(
+                    java.time.LocalTime.parse(
+                            intakeTimeField.getText().trim()));
+
+            medicine.setStockQuantity(
+                    Integer.parseInt(
+                            stockField.getText().trim()));
+
+            medicine.setMinimumStock(
+                    Integer.parseInt(
+                            minimumStockField.getText().trim()));
+
+            medicine.setPrescribedFor(
+                    prescribedForField.getText().trim());
+
+            medicine.setPrescribedBy(
+                    prescribedByField.getText().trim());
+
+            medicine.setExpiryDate(
+                    java.time.LocalDate.parse(
+                            expiryDateField.getText().trim()));
+
+            medicineManager.updateMedicine(medicine);
+
+            MessageDialog.showSuccess(
+                    this,
+                    "Medicine updated successfully.");
+
+            loadMedicineTable();
+
+            clearForm();
+
+        } catch (Exception ex) {
+
+            MessageDialog.showError(
+                    this,
+                    "Unable to update medicine.");
+
+        }
+
+    }
+
+    // =====================================================
+    // Delete Medicine
+    // =====================================================
+
+    private void deleteMedicine() {
+
+        String medicineId =
+                medicineIdField.getText().trim();
+
+        if (medicineManager.deleteMedicine(medicineId)) {
+
+            MessageDialog.showSuccess(
+                    this,
+                    "Medicine deleted successfully.");
+
+            loadMedicineTable();
+
+            clearForm();
+
+        } else {
+
+            MessageDialog.showError(
+                    this,
+                    "Medicine not found.");
+
+        }
+
+    }
+
+    // =====================================================
+    // View Medicine Details
+    // =====================================================
+
+    private void viewMedicineDetails() {
+
+        String medicineId =
+                medicineIdField.getText().trim();
+
+        Medicine medicine =
+                medicineManager.getMedicine(medicineId);
+
+        if (medicine == null) {
+
+            MessageDialog.showError(
+                    this,
+                    "Medicine not found.");
+
+            return;
+
+        }
+
+        String details =
+                "Medicine ID : " + medicine.getMedicineId()
+                + "\nMedicine : " + medicine.getMedicineName()
+                + "\nGeneric : " + medicine.getGenericName()
+                + "\nManufacturer : " + medicine.getManufacturer()
+                + "\nDosage : " + medicine.getDosage()
+                + "\nFrequency : " + medicine.getFrequency()
+                + "\nIntake Time : " + medicine.getIntakeTime()
+                + "\nStock : " + medicine.getStockQuantity()
+                + "\nMinimum Stock : " + medicine.getMinimumStock()
+                + "\nExpiry : " + medicine.getExpiryDate()
+                + "\nPrescribed For : " + medicine.getPrescribedFor()
+                + "\nPrescribed By : " + medicine.getPrescribedBy();
+
+        MessageDialog.showInfo(this, details);
+
+    }
+
 
 }
