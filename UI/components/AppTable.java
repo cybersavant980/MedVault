@@ -48,21 +48,7 @@ public class AppTable extends JTable {
 
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JTableHeader header = getTableHeader();
-
-        header.setPreferredSize(new Dimension(0, 42));
-
-        header.setBackground(Theme.PRIMARY);
-
-        header.setForeground(Color.WHITE);
-
-        header.setFont(Theme.BUTTON_FONT);
-
-        header.setReorderingAllowed(false);
-
-        header.setResizingAllowed(false);
-
-        header.setBorder(BorderFactory.createEmptyBorder());
+        styleHeader();
 
         DefaultTableCellRenderer centerRenderer =
                 new DefaultTableCellRenderer();
@@ -128,14 +114,57 @@ public class AppTable extends JTable {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-
                 return false;
-
             }
 
         };
 
         setModel(model);
+        styleHeader();;
+
+    }
+
+    private void styleHeader() {
+
+        JTableHeader header = getTableHeader();
+
+        header.setPreferredSize(new Dimension(0, 42));
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(false);
+
+        header.setDefaultRenderer(new DefaultTableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column) {
+
+                JLabel label = (JLabel) super.getTableCellRendererComponent(
+                        table,
+                        value,
+                        false,
+                        false,
+                        row,
+                        column);
+
+                label.setOpaque(true);
+
+                label.setBackground(Theme.PRIMARY);
+                label.setForeground(Color.WHITE);
+
+                label.setFont(Theme.BUTTON_FONT);
+
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+
+                label.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+                return label;
+            }
+        });
 
     }
 

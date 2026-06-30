@@ -401,6 +401,42 @@ public class PatientPanel extends JPanel {
 
         detailsButton.addActionListener(e -> viewPatientDetails());
 
+        patientTable.getSelectionModel().addListSelectionListener(e -> {
+
+                if (e.getValueIsAdjusting()) {
+                        return;
+                }
+
+                int row = patientTable.getSelectedRow();
+
+                if (row == -1) {
+                        return;
+                }
+
+                String patientId = patientTable.getValueAt(row, 0).toString();
+
+                Patient patient = patientManager.getPatient(patientId);
+
+                if (patient == null) {
+                        return;
+                }
+
+                patientIdField.setText(patient.getPatientId());
+                patientNameField.setText(patient.getFullName());
+                ageField.setText(String.valueOf(patient.getAge()));
+
+                genderComboBox.setSelectedItem(patient.getGender());
+                bloodGroupComboBox.setSelectedItem(patient.getBloodGroup());
+
+                diseaseField.setText(patient.getCurrentDisease());
+                phoneField.setText(patient.getPhoneNumber());
+                emailField.setText(patient.getEmail());
+                addressField.setText(patient.getAddress());
+
+                emergencyContactField.setText(patient.getEmergencyContactName());
+                emergencyPhoneField.setText(patient.getEmergencyContactPhone());
+
+        });
     }
 
     // =====================================================

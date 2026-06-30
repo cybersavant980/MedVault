@@ -62,9 +62,9 @@ public class DigitalTwinPanel extends JPanel {
         humanBodyImage = new JLabel(
                 "<html><pre style='font-size:18px;'>"
                 + "          O\n"
-                + "         /|\\\\\n"
+                + "         /|\\\n"
                 + "          |\n"
-                + "         / \\\\\n\n"
+                + "         / \\\n\n"
                 + "   Human Body"
                 + "</pre></html>",
         SwingConstants.CENTER);

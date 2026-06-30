@@ -53,9 +53,11 @@ public class SettingsPanel extends JPanel {
 
                 + "Version : 1.0\n\n"
 
-                + "Developed using Java Swing\n"
+                + "Developed by Team MeadVault\n" 
 
-                + "Data Storage : .dat Files\n"
+                + "Lead by Vanshika Joshi with team members; Mangilal Dewasi and Lakshmi Kashyap\n\n"
+
+                + "Data Storage : using .dat Files\n"
 
                 + "Architecture : OOP + DSA\n"
 
