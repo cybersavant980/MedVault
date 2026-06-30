@@ -25,12 +25,6 @@ public class EmergencyPanel extends JPanel {
     private JLabel subtitleLabel;
 
     // =====================================================
-    // Search
-    // =====================================================
-
-    private SearchBar searchBar;
-
-    // =====================================================
     // Form Fields
     // =====================================================
 
@@ -95,8 +89,6 @@ public class EmergencyPanel extends JPanel {
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
         subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
 
-        searchBar = new SearchBar();
-
         patientIdField = new RoundedTextField(20);
         patientNameField = new RoundedTextField(20);
         bloodGroupField = new RoundedTextField(20);
@@ -132,25 +124,28 @@ public class EmergencyPanel extends JPanel {
 
     private void layoutComponents() {
 
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(15,15));
         setBackground(Theme.BACKGROUND);
 
         add(createHeaderPanel(), BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new BorderLayout(15, 15));
+        JPanel centerPanel = new JPanel(new BorderLayout(15,15));
         centerPanel.setOpaque(false);
 
-        JPanel topPanel = new JPanel(new BorderLayout(15, 15));
-        topPanel.setOpaque(false);
+        // Form at the top
+        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
 
-        topPanel.add(createSearchPanel(), BorderLayout.NORTH);
-        topPanel.add(createFormPanel(), BorderLayout.CENTER);
+        // Buttons + Table
+        JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
+        bottomPanel.setOpaque(false);
 
-        centerPanel.add(topPanel, BorderLayout.NORTH);
-        centerPanel.add(createButtonPanel(), BorderLayout.CENTER);
-        centerPanel.add(createTablePanel(), BorderLayout.SOUTH);
+        bottomPanel.add(createButtonPanel(), BorderLayout.NORTH);
+        bottomPanel.add(createTablePanel(), BorderLayout.CENTER);
+
+        centerPanel.add(bottomPanel, BorderLayout.CENTER);
 
         add(centerPanel, BorderLayout.CENTER);
+
         add(createStatusPanel(), BorderLayout.SOUTH);
 
     }
@@ -178,24 +173,6 @@ public class EmergencyPanel extends JPanel {
 
     }
 
-    // =====================================================
-    // Search Panel
-    // =====================================================
-
-    private JPanel createSearchPanel() {
-
-        RoundedPanel panel = new RoundedPanel();
-        panel.setLayout(new BorderLayout(10,10));
-
-        JLabel label = new JLabel("Search Emergency Record");
-        label.setFont(Theme.HEADER_FONT);
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(searchBar, BorderLayout.CENTER);
-
-        return panel;
-
-    }
 
     // =====================================================
     // Form Panel
@@ -204,6 +181,7 @@ public class EmergencyPanel extends JPanel {
     private JPanel createFormPanel() {
 
         RoundedPanel panel = new RoundedPanel();
+        panel.setPreferredSize(new Dimension(1000,260));
         panel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -322,6 +300,7 @@ public class EmergencyPanel extends JPanel {
     private JPanel createTablePanel() {
 
         RoundedPanel panel = new RoundedPanel();
+        panel.setPreferredSize(new Dimension(1000,300));
         panel.setLayout(new BorderLayout());
 
         JLabel title = new JLabel("Emergency Records");
@@ -396,7 +375,38 @@ public class EmergencyPanel extends JPanel {
 
     private void loadEmergencyTable() {
 
-        statusLabel.setText("Status : Emergency records loaded.");
+        String[] columns = {
+                "Patient ID",
+                "Blood Group",
+                "Emergency Contact",
+                "Doctor",
+                "Hospital"
+        };
+
+        java.util.List<Emergency> list =
+                emergencyManager.getAllEmergencyRecords();
+
+        Object[][] data = new Object[list.size()][5];
+
+        for (int i = 0; i < list.size(); i++) {
+
+            Emergency e = list.get(i);
+
+            data[i][0] = e.getPatientId();
+            data[i][1] = e.getBloodGroup();
+            data[i][2] = e.getPrimaryContactName();
+            data[i][3] = e.getFamilyDoctor();
+            data[i][4] = e.getPreferredHospital();
+
+        }
+
+        emergencyTable.setTableData(columns, data);
+
+        totalEmergencyLabel.setText(
+                "Emergency Records : " + list.size());
+
+        statusLabel.setText(
+                "Status : " + list.size() + " record(s) loaded.");
 
     }
 

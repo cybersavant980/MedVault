@@ -19,12 +19,6 @@ public class PatientPanel extends JPanel {
     private JLabel subtitleLabel;
 
     // =====================================================
-    // Search
-    // =====================================================
-
-    private SearchBar searchBar;
-
-    // =====================================================
     // Form Fields
     // =====================================================
 
@@ -94,8 +88,6 @@ public class PatientPanel extends JPanel {
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
         subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
 
-        searchBar = new SearchBar();
-
         patientIdField = new RoundedTextField(20);
         patientNameField = new RoundedTextField(20);
         ageField = new RoundedTextField(20);
@@ -147,7 +139,7 @@ public class PatientPanel extends JPanel {
     // Layout
     // =====================================================
 
-    private void layoutComponents() {
+        private void layoutComponents() {
 
         setLayout(new BorderLayout(15,15));
         setBackground(Theme.BACKGROUND);
@@ -158,19 +150,23 @@ public class PatientPanel extends JPanel {
         JPanel centerPanel = new JPanel(new BorderLayout(15,15));
         centerPanel.setOpaque(false);
 
-        JPanel topPanel = new JPanel(new BorderLayout(15,15));
-        topPanel.setOpaque(false);
+        // Form
+        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
 
-        topPanel.add(createSearchPanel(), BorderLayout.NORTH);
-        topPanel.add(createFormPanel(), BorderLayout.CENTER);
+        // Buttons + Table
+        JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
+        bottomPanel.setOpaque(false);
 
-        centerPanel.add(topPanel, BorderLayout.NORTH);
-        centerPanel.add(createButtonPanel(), BorderLayout.CENTER);
-        centerPanel.add(createTablePanel(), BorderLayout.SOUTH);
+        bottomPanel.add(createButtonPanel(), BorderLayout.NORTH);
+        bottomPanel.add(createTablePanel(), BorderLayout.CENTER);
+
+        centerPanel.add(bottomPanel, BorderLayout.CENTER);
 
         add(centerPanel, BorderLayout.CENTER);
+
         add(createStatusPanel(), BorderLayout.SOUTH);
-    }
+
+        }
 
     // =====================================================
     // Header
@@ -196,31 +192,13 @@ public class PatientPanel extends JPanel {
     }
 
     // =====================================================
-    // Search Panel
-    // =====================================================
-
-    private JPanel createSearchPanel(){
-
-        RoundedPanel panel = new RoundedPanel();
-        panel.setLayout(new BorderLayout(10,10));
-        panel.setBorder(new EmptyBorder(15,15,15,15));
-
-        JLabel searchLabel = new JLabel("Search Patient");
-        searchLabel.setFont(Theme.HEADER_FONT);
-
-        panel.add(searchLabel,BorderLayout.NORTH);
-        panel.add(searchBar,BorderLayout.CENTER);
-
-        return panel;
-
-    }
-    // =====================================================
     // Form Panel
     // =====================================================
 
     private JPanel createFormPanel() {
 
         RoundedPanel panel = new RoundedPanel();
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE,320));
         panel.setLayout(new GridBagLayout());
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -354,6 +332,7 @@ public class PatientPanel extends JPanel {
     private JPanel createTablePanel() {
 
         RoundedPanel panel = new RoundedPanel();
+        panel.setPreferredSize(new Dimension(1000,300));
         panel.setLayout(new BorderLayout());
         panel.setBorder(new EmptyBorder(15, 15, 15, 15));
 

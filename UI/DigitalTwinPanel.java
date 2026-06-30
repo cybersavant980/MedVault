@@ -60,8 +60,16 @@ public class DigitalTwinPanel extends JPanel {
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
 
         humanBodyImage = new JLabel(
-                "Human Body Image",
-                SwingConstants.CENTER);
+                "<html><pre style='font-size:18px;'>"
+                + "          O\n"
+                + "         /|\\\\\n"
+                + "          |\n"
+                + "         / \\\\\n\n"
+                + "   Human Body"
+                + "</pre></html>",
+        SwingConstants.CENTER);
+
+        humanBodyImage.setFont(new Font("Consolas", Font.BOLD, 18));
 
         humanBodyImage.setPreferredSize(new Dimension(350, 550));
 

@@ -25,12 +25,6 @@ public class MedicinePanel extends JPanel {
     private JLabel subtitleLabel;
 
     // =====================================================
-    // Search
-    // =====================================================
-
-    private SearchBar searchBar;
-
-    // =====================================================
     // Form Fields
     // =====================================================
 
@@ -97,8 +91,6 @@ public class MedicinePanel extends JPanel {
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
         subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
 
-        searchBar = new SearchBar();
-
         medicineIdField = new RoundedTextField(20);
         medicineNameField = new RoundedTextField(20);
         genericNameField = new RoundedTextField(20);
@@ -133,30 +125,33 @@ public class MedicinePanel extends JPanel {
 
     }
 
-    private void layoutComponents() {
+        private void layoutComponents() {
 
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(15,15));
         setBackground(Theme.BACKGROUND);
 
         add(createHeaderPanel(), BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new BorderLayout(15, 15));
+        JPanel centerPanel = new JPanel(new BorderLayout(15,15));
         centerPanel.setOpaque(false);
 
-        JPanel topPanel = new JPanel(new BorderLayout(15, 15));
-        topPanel.setOpaque(false);
+        // Form at the top
+        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
 
-        topPanel.add(createSearchPanel(), BorderLayout.NORTH);
-        topPanel.add(createFormPanel(), BorderLayout.CENTER);
+        // Buttons + Table
+        JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
+        bottomPanel.setOpaque(false);
 
-        centerPanel.add(topPanel, BorderLayout.NORTH);
-        centerPanel.add(createButtonPanel(), BorderLayout.CENTER);
-        centerPanel.add(createTablePanel(), BorderLayout.SOUTH);
+        bottomPanel.add(createButtonPanel(), BorderLayout.NORTH);
+        bottomPanel.add(createTablePanel(), BorderLayout.CENTER);
+
+        centerPanel.add(bottomPanel, BorderLayout.CENTER);
 
         add(centerPanel, BorderLayout.CENTER);
+
         add(createStatusPanel(), BorderLayout.SOUTH);
 
-    }
+        }
 
     private JPanel createHeaderPanel() {
 
@@ -172,22 +167,6 @@ public class MedicinePanel extends JPanel {
         titlePanel.add(subtitleLabel);
 
         panel.add(titlePanel, BorderLayout.WEST);
-
-        return panel;
-
-    }
-
-    private JPanel createSearchPanel() {
-
-        RoundedPanel panel = new RoundedPanel();
-
-        panel.setLayout(new BorderLayout(10, 10));
-
-        JLabel label = new JLabel("Search Medicine");
-        label.setFont(Theme.HEADER_FONT);
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(searchBar, BorderLayout.CENTER);
 
         return panel;
 
@@ -673,6 +652,33 @@ public class MedicinePanel extends JPanel {
         MessageDialog.showInfo(this, details);
 
     }
+    
+        private void clearForm() {
+
+        medicineIdField.setText("");
+        medicineNameField.setText("");
+        genericNameField.setText("");
+        manufacturerField.setText("");
+
+        dosageField.setText("");
+        frequencyField.setText("");
+        intakeTimeField.setText("");
+
+        stockField.setText("");
+        minimumStockField.setText("");
+
+        prescribedForField.setText("");
+        prescribedByField.setText("");
+
+        expiryDateField.setText("");
+
+        medicineTable.clearSelection();
+
+        medicineIdField.requestFocus();
+
+        statusLabel.setText("Status : Ready");
+
+        }
 
 
 }

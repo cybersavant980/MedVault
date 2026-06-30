@@ -16,7 +16,7 @@ public class RoundedTextField extends JTextField {
 
     public RoundedTextField(int columns) {
         super(columns);
-        this.cornerRadius = Theme.TEXTFIELD_RADIUS;
+        cornerRadius = Theme.TEXTFIELD_RADIUS;
         initialize();
     }
 
@@ -30,13 +30,16 @@ public class RoundedTextField extends JTextField {
 
         setBackground(Color.WHITE);
 
-        setBorder(new EmptyBorder(10, 15, 10, 15));
-
-        setPreferredSize(new Dimension(250, Theme.TEXTFIELD_HEIGHT));
-
         setCaretColor(Theme.PRIMARY);
 
         setSelectionColor(Theme.PRIMARY_LIGHT);
+
+        setBorder(new EmptyBorder(10,16,10,16));
+
+        setPreferredSize(
+                new Dimension(
+                        260,
+                        Theme.TEXTFIELD_HEIGHT));
 
     }
 
@@ -49,13 +52,31 @@ public class RoundedTextField extends JTextField {
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setColor(getBackground());
+        g2.setRenderingHint(
+                RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY);
+
+        // Shadow
+
+        g2.setColor(new Color(0,0,0,12));
+
+        g2.fillRoundRect(
+                2,
+                3,
+                getWidth()-4,
+                getHeight()-3,
+                cornerRadius,
+                cornerRadius);
+
+        // Background
+
+        g2.setColor(Color.WHITE);
 
         g2.fillRoundRect(
                 0,
                 0,
-                getWidth(),
-                getHeight(),
+                getWidth()-2,
+                getHeight()-2,
                 cornerRadius,
                 cornerRadius);
 
@@ -75,16 +96,22 @@ public class RoundedTextField extends JTextField {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (isFocusOwner()) {
+
             g2.setColor(Theme.PRIMARY);
+
         } else {
-            g2.setColor(Theme.BORDER);
+
+            g2.setColor(Theme.CARD_BORDER);
+
         }
+
+        g2.setStroke(new BasicStroke(1.5f));
 
         g2.drawRoundRect(
                 0,
                 0,
-                getWidth() - 1,
-                getHeight() - 1,
+                getWidth()-3,
+                getHeight()-3,
                 cornerRadius,
                 cornerRadius);
 

@@ -18,12 +18,6 @@ public class HealthPassportPanel extends JPanel {
     private JLabel subtitleLabel;
 
     // =====================================================
-    // Search
-    // =====================================================
-
-    private SearchBar searchBar;
-
-    // =====================================================
     // Form Fields
     // =====================================================
 
@@ -100,8 +94,6 @@ public class HealthPassportPanel extends JPanel {
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
         subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
 
-        searchBar = new SearchBar();
-
         passportIdField = new RoundedTextField(20);
         patientIdField = new RoundedTextField(20);
         patientNameField = new RoundedTextField(20);
@@ -144,35 +136,33 @@ public class HealthPassportPanel extends JPanel {
     // Layout
     // =====================================================
 
-    private void layoutComponents() {
+        private void layoutComponents() {
 
         setLayout(new BorderLayout(15,15));
         setBackground(Theme.BACKGROUND);
 
-        add(createHeaderPanel(),BorderLayout.NORTH);
+        add(createHeaderPanel(), BorderLayout.NORTH);
 
-        JPanel centerPanel =
-                new JPanel(new BorderLayout(15,15));
-
+        JPanel centerPanel = new JPanel(new BorderLayout(15,15));
         centerPanel.setOpaque(false);
 
-        JPanel topPanel =
-                new JPanel(new BorderLayout(15,15));
+        // Form at the top
+        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
 
-        topPanel.setOpaque(false);
+        // Buttons + Table
+        JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
+        bottomPanel.setOpaque(false);
 
-        topPanel.add(createSearchPanel(),BorderLayout.NORTH);
-        topPanel.add(createFormPanel(),BorderLayout.CENTER);
+        bottomPanel.add(createButtonPanel(), BorderLayout.NORTH);
+        bottomPanel.add(createTablePanel(), BorderLayout.CENTER);
 
-        centerPanel.add(topPanel,BorderLayout.NORTH);
-        centerPanel.add(createButtonPanel(),BorderLayout.CENTER);
-        centerPanel.add(createTablePanel(),BorderLayout.SOUTH);
+        centerPanel.add(bottomPanel, BorderLayout.CENTER);
 
-        add(centerPanel,BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
 
-        add(createStatusPanel(),BorderLayout.SOUTH);
+        add(createStatusPanel(), BorderLayout.SOUTH);
 
-    }
+        }
 
     // =====================================================
     // Header
@@ -204,28 +194,7 @@ public class HealthPassportPanel extends JPanel {
 
     }
 
-    // =====================================================
-    // Search
-    // =====================================================
 
-    private JPanel createSearchPanel() {
-
-        RoundedPanel panel = new RoundedPanel();
-
-        panel.setLayout(new BorderLayout(10,10));
-
-        JLabel label =
-                new JLabel("Search Passport");
-
-        label.setFont(Theme.HEADER_FONT);
-
-        panel.add(label,BorderLayout.NORTH);
-
-        panel.add(searchBar,BorderLayout.CENTER);
-
-        return panel;
-
-    }
     // =====================================================
     // Form Panel
     // =====================================================
@@ -233,6 +202,7 @@ public class HealthPassportPanel extends JPanel {
     private JPanel createFormPanel() {
 
         RoundedPanel panel = new RoundedPanel();
+        panel.setPreferredSize(new Dimension(1000,420));
         panel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -420,7 +390,7 @@ public class HealthPassportPanel extends JPanel {
     private JPanel createTablePanel() {
 
         RoundedPanel panel = new RoundedPanel();
-
+        panel.setPreferredSize(new Dimension(1000,300));
         panel.setLayout(new BorderLayout());
 
         JLabel title =
