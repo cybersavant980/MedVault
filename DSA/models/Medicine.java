@@ -24,7 +24,7 @@ public class Medicine implements Serializable {
 
     private String dosage;
     private String frequency;
-    private LocalTime intakeTime;
+    private String intakeTime;
 
     // =====================================================
     // Stock Information
@@ -59,7 +59,7 @@ public class Medicine implements Serializable {
                     String manufacturer,
                     String dosage,
                     String frequency,
-                    LocalTime intakeTime,
+                    String intakeTime,
                     int stockQuantity,
                     int minimumStock,
                     String prescribedFor,
@@ -132,11 +132,11 @@ public class Medicine implements Serializable {
         this.frequency = frequency;
     }
 
-    public LocalTime getIntakeTime() {
+    public String getIntakeTime() {
         return intakeTime;
     }
 
-    public void setIntakeTime(LocalTime intakeTime) {
+    public void setIntakeTime(String intakeTime) {
         this.intakeTime = intakeTime;
     }
 

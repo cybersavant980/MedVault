@@ -147,7 +147,11 @@ public class HealthPassportPanel extends JPanel {
         centerPanel.setOpaque(false);
 
         // Form at the top
-        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
+        JScrollPane formScroll = new JScrollPane(createFormPanel());
+
+        formScroll.setBorder(BorderFactory.createEmptyBorder());
+        formScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        centerPanel.add(formScroll, BorderLayout.NORTH);
 
         // Buttons + Table
         JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
@@ -202,7 +206,7 @@ public class HealthPassportPanel extends JPanel {
     private JPanel createFormPanel() {
 
         RoundedPanel panel = new RoundedPanel();
-        panel.setPreferredSize(new Dimension(1000,420));
+        panel.setPreferredSize(new Dimension(1000,620));
         panel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();

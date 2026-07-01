@@ -9,7 +9,11 @@ import UI.theme.Theme;
 import javax.swing.*;
 import java.awt.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class MedicinePanel extends JPanel {
+
 
     // =====================================================
     // Manager
@@ -68,6 +72,7 @@ public class MedicinePanel extends JPanel {
 
     private JLabel statusLabel;
     private JLabel totalMedicineLabel;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public MedicinePanel() {
 
@@ -373,6 +378,39 @@ public class MedicinePanel extends JPanel {
 
         detailsButton.addActionListener(e -> viewMedicineDetails());
 
+        medicineTable.getSelectionModel().addListSelectionListener(e -> {
+
+                if (e.getValueIsAdjusting()) return;
+
+                int row = medicineTable.getSelectedRow();
+
+                if (row == -1) return;
+
+                String medicineId = medicineTable.getValueAt(row, 0).toString();
+
+                Medicine medicine = medicineManager.getMedicine(medicineId);
+
+                if (medicine == null) return;
+
+                medicineIdField.setText(medicine.getMedicineId());
+                medicineNameField.setText(medicine.getMedicineName());
+                genericNameField.setText(medicine.getGenericName());
+                manufacturerField.setText(medicine.getManufacturer());
+
+                dosageField.setText(medicine.getDosage());
+                frequencyField.setText(medicine.getFrequency());
+                intakeTimeField.setText(String.valueOf(medicine.getIntakeTime()));
+
+                stockField.setText(String.valueOf(medicine.getStockQuantity()));
+                minimumStockField.setText(String.valueOf(medicine.getMinimumStock()));
+
+                prescribedForField.setText(medicine.getPrescribedFor());
+                prescribedByField.setText(medicine.getPrescribedBy());
+
+                expiryDateField.setText(String.valueOf(medicine.getExpiryDate()));
+
+        });
+
     }
 
     // =====================================================
@@ -437,9 +475,7 @@ public class MedicinePanel extends JPanel {
             String dosage = dosageField.getText().trim();
             String frequency = frequencyField.getText().trim();
 
-            java.time.LocalTime intakeTime =
-                    java.time.LocalTime.parse(
-                            intakeTimeField.getText().trim());
+            String intakeTime = intakeTimeField.getText().trim();
 
             int stock =
                     Integer.parseInt(stockField.getText().trim());
@@ -454,9 +490,10 @@ public class MedicinePanel extends JPanel {
             String prescribedBy =
                     prescribedByField.getText().trim();
 
-            java.time.LocalDate expiryDate =
-                    java.time.LocalDate.parse(
-                            expiryDateField.getText().trim());
+                LocalDate expiryDate =
+                        LocalDate.parse(
+                                expiryDateField.getText().trim(),
+                                formatter);
 
             Medicine medicine = new Medicine(
 
@@ -543,8 +580,7 @@ public class MedicinePanel extends JPanel {
                     frequencyField.getText().trim());
 
             medicine.setIntakeTime(
-                    java.time.LocalTime.parse(
-                            intakeTimeField.getText().trim()));
+                        intakeTimeField.getText().trim());
 
             medicine.setStockQuantity(
                     Integer.parseInt(
@@ -562,7 +598,7 @@ public class MedicinePanel extends JPanel {
 
             medicine.setExpiryDate(
                     java.time.LocalDate.parse(
-                            expiryDateField.getText().trim()));
+                            expiryDateField.getText().trim(),formatter));
 
             medicineManager.updateMedicine(medicine);
 

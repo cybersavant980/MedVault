@@ -133,7 +133,15 @@ public class EmergencyPanel extends JPanel {
         centerPanel.setOpaque(false);
 
         // Form at the top
-        centerPanel.add(createFormPanel(), BorderLayout.NORTH);
+        JScrollPane formScroll = new JScrollPane(createFormPanel());
+
+        formScroll.setBorder(BorderFactory.createEmptyBorder());
+        formScroll.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        formScroll.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        centerPanel.add(formScroll, BorderLayout.NORTH);
 
         // Buttons + Table
         JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
@@ -181,7 +189,7 @@ public class EmergencyPanel extends JPanel {
     private JPanel createFormPanel() {
 
         RoundedPanel panel = new RoundedPanel();
-        panel.setPreferredSize(new Dimension(1000,260));
+        panel.setPreferredSize(new Dimension(1000,420));
         panel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -367,6 +375,50 @@ public class EmergencyPanel extends JPanel {
 
         detailsButton.addActionListener(e -> viewEmergencyDetails());
 
+        emergencyTable.getSelectionModel().addListSelectionListener(e -> {
+
+            if (e.getValueIsAdjusting()) return;
+
+            int row = emergencyTable.getSelectedRow();
+
+            if (row == -1) return;
+
+            String patientId =
+                    emergencyTable.getValueAt(row,0).toString();
+
+            Emergency emergency =
+                    emergencyManager.getEmergency(patientId);
+
+            if (emergency == null) return;
+
+                patientIdField.setText(emergency.getPatientId());
+
+                patientNameField.setText("");
+
+                bloodGroupField.setText(
+                        emergency.getBloodGroup());
+
+                allergiesField.setText(
+                        emergency.getAllergies());
+
+                diseasesField.setText(
+                        emergency.getChronicDisease());
+
+                medicinesField.setText("");
+
+                emergencyContactField.setText(
+                        emergency.getPrimaryContactName());
+
+                emergencyPhoneField.setText(
+                        emergency.getPrimaryContactNumber());
+
+                doctorNameField.setText(
+                        emergency.getFamilyDoctor());
+
+                doctorPhoneField.setText(
+                        emergency.getDoctorContact());
+        });
+
     }
 
     // =====================================================
@@ -376,11 +428,13 @@ public class EmergencyPanel extends JPanel {
     private void loadEmergencyTable() {
 
         String[] columns = {
-                "Patient ID",
-                "Blood Group",
-                "Emergency Contact",
-                "Doctor",
-                "Hospital"
+
+            "Patient ID",
+            "Blood Group",
+            "Emergency Contact",
+            "Doctor",
+            "Hospital"
+
         };
 
         java.util.List<Emergency> list =
