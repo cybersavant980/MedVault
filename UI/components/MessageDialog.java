@@ -1,14 +1,8 @@
 package UI.components;
-
 import javax.swing.*;
 import java.awt.*;
-
 public final class MessageDialog {
-
-    private MessageDialog() {
-        // Prevent instantiation
-    }
-
+    private MessageDialog() { }
     public static void showInfo(Component parent, String message) {
         JOptionPane.showMessageDialog(
                 parent,
@@ -37,7 +31,6 @@ public final class MessageDialog {
     }
 
     public static boolean showConfirm(Component parent, String message) {
-
         int result = JOptionPane.showConfirmDialog(
                 parent,
                 message,
@@ -45,8 +38,6 @@ public final class MessageDialog {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
-
         return result == JOptionPane.YES_OPTION;
     }
-
 }

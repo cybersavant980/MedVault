@@ -1,6 +1,9 @@
 # Compiled Java files
 *.class
 
+# data files
+*.dat
+
 # VS Code
 .vscode/
 

@@ -1,5 +1,4 @@
 package UI;
-
 import UI.components.*;
 import UI.theme.Theme;
 import DSA.managers.PatientManager;
@@ -10,95 +9,45 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class PatientPanel extends JPanel {
+    private JLabel titleLabel,subtitleLabel;
 
-    // =====================================================
-    // Header
-    // =====================================================
+    private RoundedTextField patientIdField,patientNameField,diseaseField,ageField,phoneField,emailField,addressField,emergencyContactField,emergencyPhoneField;
 
-    private JLabel titleLabel;
-    private JLabel subtitleLabel;
-
-    // =====================================================
-    // Form Fields
-    // =====================================================
-
-    private RoundedTextField patientIdField;
-    private RoundedTextField patientNameField;
-    private RoundedTextField ageField;
     private JComboBox<String> genderComboBox;
     private JComboBox<String> bloodGroupComboBox;
-    private RoundedTextField diseaseField;
-    private RoundedTextField phoneField;
-    private RoundedTextField emailField;
-    private RoundedTextField addressField;
-    private RoundedTextField emergencyContactField;
-    private RoundedTextField emergencyPhoneField;
 
-    // =====================================================
-    // Buttons
-    // =====================================================
-
-    private RoundedButton addButton;
-    private RoundedButton updateButton;
-    private RoundedButton deleteButton;
-    private RoundedButton clearButton;
-    private RoundedButton refreshButton;
-    private RoundedButton detailsButton;
-
-    // =====================================================
-    // Table
-    // =====================================================
+    private RoundedButton addButton,updateButton,deleteButton,clearButton,refreshButton,detailsButton;
 
     private AppTable patientTable;
     private PatientManager patientManager;
-    // =====================================================
-    // Status
-    // =====================================================
 
-    private JLabel statusLabel;
-    private JLabel totalPatientsLabel;
-
-    // =====================================================
-    // Constructor
-    // =====================================================
+    private JLabel statusLabel,totalPatientsLabel;
 
     public PatientPanel() {
-
         patientManager = new PatientManager();
-
         initializeComponents();
         layoutComponents();
         registerEvents();
-
         loadPatientTable();
-
     }
 
-    // =====================================================
-    // Initialize Components
-    // =====================================================
-
     private void initializeComponents() {
-
         titleLabel = new JLabel("Patient Management");
         titleLabel.setFont(Theme.TITLE_FONT);
         titleLabel.setForeground(Theme.TEXT_PRIMARY);
-
         subtitleLabel = new JLabel("Manage family patient records");
         subtitleLabel.setFont(Theme.SUBTITLE_FONT);
         subtitleLabel.setForeground(Theme.TEXT_SECONDARY);
-
         patientIdField = new RoundedTextField(20);
         patientNameField = new RoundedTextField(20);
         ageField = new RoundedTextField(20);
-
         genderComboBox = new JComboBox<>(
                 new String[]{
                         "Male",
                         "Female",
                         "Other"
-                });
-
+                }
+        );
         bloodGroupComboBox = new JComboBox<>(
                 new String[]{
                         "A+",
@@ -109,238 +58,141 @@ public class PatientPanel extends JPanel {
                         "AB-",
                         "O+",
                         "O-"
-                });
-
+                }
+        );
         diseaseField = new RoundedTextField(20);
         phoneField = new RoundedTextField(20);
         emailField = new RoundedTextField(20);
         addressField = new RoundedTextField(20);
         emergencyContactField = new RoundedTextField(20);
         emergencyPhoneField = new RoundedTextField(20);
-
         addButton = new RoundedButton("Add");
         updateButton = new RoundedButton("Update");
         deleteButton = new RoundedButton("Delete");
         clearButton = new RoundedButton("Clear");
         refreshButton = new RoundedButton("Refresh");
         detailsButton = new RoundedButton("View Details");
-
         patientTable = new AppTable();
-
         statusLabel = new JLabel("Status : Ready");
         statusLabel.setFont(Theme.BODY_FONT);
-
         totalPatientsLabel = new JLabel("Total Patients : 0");
         totalPatientsLabel.setFont(Theme.BODY_FONT);
-
     }
 
-    // =====================================================
-    // Layout
-    // =====================================================
-
-        private void layoutComponents() {
-
+    private void layoutComponents() {
         setLayout(new BorderLayout(15,15));
         setBackground(Theme.BACKGROUND);
         setBorder(new EmptyBorder(20,20,20,20));
-
         add(createHeaderPanel(), BorderLayout.NORTH);
-
         JPanel centerPanel = new JPanel(new BorderLayout(15,15));
         centerPanel.setOpaque(false);
-
         // Form
         centerPanel.add(createFormPanel(), BorderLayout.NORTH);
-
         // Buttons + Table
         JPanel bottomPanel = new JPanel(new BorderLayout(15,15));
         bottomPanel.setOpaque(false);
-
         bottomPanel.add(createButtonPanel(), BorderLayout.NORTH);
         bottomPanel.add(createTablePanel(), BorderLayout.CENTER);
-
         centerPanel.add(bottomPanel, BorderLayout.CENTER);
-
         add(centerPanel, BorderLayout.CENTER);
-
         add(createStatusPanel(), BorderLayout.SOUTH);
-
-        }
-
-    // =====================================================
-    // Header
-    // =====================================================
+    }
 
     private JPanel createHeaderPanel(){
-
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
-
         JPanel titlePanel = new JPanel();
         titlePanel.setOpaque(false);
         titlePanel.setLayout(new BoxLayout(titlePanel,BoxLayout.Y_AXIS));
-
         titlePanel.add(titleLabel);
         titlePanel.add(Box.createVerticalStrut(5));
         titlePanel.add(subtitleLabel);
-
         panel.add(titlePanel,BorderLayout.WEST);
-
         return panel;
-
     }
 
-    // =====================================================
-    // Form Panel
-    // =====================================================
-
     private JPanel createFormPanel() {
-
         RoundedPanel panel = new RoundedPanel();
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE,320));
         panel.setLayout(new GridBagLayout());
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-
         GridBagConstraints gbc = new GridBagConstraints();
-
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1;
-
-        // =========================
-        // Row 1
-        // =========================
-
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(new JLabel("Patient ID"), gbc);
-
         gbc.gridx = 1;
         panel.add(new JLabel("Patient Name"), gbc);
-
         gbc.gridx = 2;
         panel.add(new JLabel("Age"), gbc);
-
         gbc.gridx = 3;
         panel.add(new JLabel("Gender"), gbc);
-
         gbc.gridy++;
-
         gbc.gridx = 0;
         panel.add(patientIdField, gbc);
-
         gbc.gridx = 1;
         panel.add(patientNameField, gbc);
-
         gbc.gridx = 2;
         panel.add(ageField, gbc);
-
         gbc.gridx = 3;
         panel.add(genderComboBox, gbc);
-
-        // =========================
-        // Row 2
-        // =========================
-
         gbc.gridy++;
-
         gbc.gridx = 0;
         panel.add(new JLabel("Blood Group"), gbc);
-
         gbc.gridx = 1;
         panel.add(new JLabel("Disease"), gbc);
-
         gbc.gridx = 2;
         panel.add(new JLabel("Phone"), gbc);
-
         gbc.gridx = 3;
         panel.add(new JLabel("Email"), gbc);
-
         gbc.gridy++;
-
         gbc.gridx = 0;
         panel.add(bloodGroupComboBox, gbc);
-
         gbc.gridx = 1;
         panel.add(diseaseField, gbc);
-
         gbc.gridx = 2;
         panel.add(phoneField, gbc);
-
         gbc.gridx = 3;
         panel.add(emailField, gbc);
-
-        // =========================
-        // Row 3
-        // =========================
-
         gbc.gridy++;
-
         gbc.gridx = 0;
         panel.add(new JLabel("Address"), gbc);
-
         gbc.gridx = 1;
         panel.add(new JLabel("Emergency Contact"), gbc);
-
         gbc.gridx = 2;
         panel.add(new JLabel("Emergency Phone"), gbc);
-
         gbc.gridy++;
-
         gbc.gridx = 0;
         panel.add(addressField, gbc);
-
         gbc.gridx = 1;
         panel.add(emergencyContactField, gbc);
-
         gbc.gridx = 2;
         panel.add(emergencyPhoneField, gbc);
-
         return panel;
-
     }
 
-    // =====================================================
-    // Button Panel
-    // =====================================================
-
     private JPanel createButtonPanel() {
-
-        JPanel panel = new JPanel(new FlowLayout(
-                FlowLayout.CENTER,
-                15,
-                10));
-
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER,15,10));
         panel.setOpaque(false);
-
         panel.add(addButton);
         panel.add(updateButton);
         panel.add(deleteButton);
         panel.add(clearButton);
         panel.add(refreshButton);
         panel.add(detailsButton);
-
         return panel;
-
     }
 
-    // =====================================================
-    // Table Panel
-    // =====================================================
-
     private JPanel createTablePanel() {
-
         RoundedPanel panel = new RoundedPanel();
         panel.setPreferredSize(new Dimension(1000,300));
         panel.setLayout(new BorderLayout());
         panel.setBorder(new EmptyBorder(15, 15, 15, 15));
-
         JLabel tableTitle = new JLabel("Patient Records");
         tableTitle.setFont(Theme.HEADER_FONT);
-
         panel.add(tableTitle, BorderLayout.NORTH);
-
         String[] columns = {
                 "Patient ID",
                 "Name",
@@ -350,189 +202,89 @@ public class PatientPanel extends JPanel {
                 "Disease",
                 "Phone"
         };
-
         patientTable.setTableData(columns, new Object[][]{});
-
         JScrollPane scrollPane = new JScrollPane(patientTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-
         panel.add(scrollPane, BorderLayout.CENTER);
-
         return panel;
-
     }
-
-    // =====================================================
-    // Status Panel
-    // =====================================================
 
     private JPanel createStatusPanel() {
-
         JPanel panel = new JPanel(new BorderLayout());
-
         panel.setBorder(new EmptyBorder(5, 10, 5, 10));
         panel.setOpaque(false);
-
         statusLabel.setForeground(Theme.TEXT_SECONDARY);
         totalPatientsLabel.setForeground(Theme.TEXT_SECONDARY);
-
         panel.add(statusLabel, BorderLayout.WEST);
         panel.add(totalPatientsLabel, BorderLayout.EAST);
-
         return panel;
-
     }
 
-    // =====================================================
-    // Event Registration
-    // =====================================================
-
     private void registerEvents() {
-
         addButton.addActionListener(e -> addPatient());
-
         updateButton.addActionListener(e -> updatePatient());
-
         deleteButton.addActionListener(e -> deletePatient());
-
         clearButton.addActionListener(e -> clearForm());
-
         refreshButton.addActionListener(e -> loadPatientTable());
-
         detailsButton.addActionListener(e -> viewPatientDetails());
-
         patientTable.getSelectionModel().addListSelectionListener(e -> {
-
-                if (e.getValueIsAdjusting()) {
-                        return;
-                }
-
+                if (e.getValueIsAdjusting()) { return; }
                 int row = patientTable.getSelectedRow();
-
-                if (row == -1) {
-                        return;
-                }
-
+                if (row == -1) { return; }
                 String patientId = patientTable.getValueAt(row, 0).toString();
-
                 Patient patient = patientManager.getPatient(patientId);
-
-                if (patient == null) {
-                        return;
-                }
-
+                if (patient == null) { return; }
                 patientIdField.setText(patient.getPatientId());
                 patientNameField.setText(patient.getFullName());
                 ageField.setText(String.valueOf(patient.getAge()));
-
                 genderComboBox.setSelectedItem(patient.getGender());
                 bloodGroupComboBox.setSelectedItem(patient.getBloodGroup());
-
                 diseaseField.setText(patient.getCurrentDisease());
                 phoneField.setText(patient.getPhoneNumber());
                 emailField.setText(patient.getEmail());
                 addressField.setText(patient.getAddress());
-
                 emergencyContactField.setText(patient.getEmergencyContactName());
                 emergencyPhoneField.setText(patient.getEmergencyContactPhone());
-
         });
     }
 
-    // =====================================================
-    // Button Actions (Integration Ready)
-    // =====================================================
-
     private void addPatient() {
-
         String patientId = patientIdField.getText().trim();
         String fullName = patientNameField.getText().trim();
-
         String ageText = ageField.getText().trim();
-
         String gender = genderComboBox.getSelectedItem().toString();
         String bloodGroup = bloodGroupComboBox.getSelectedItem().toString();
-
         String disease = diseaseField.getText().trim();
         String phone = phoneField.getText().trim();
         String email = emailField.getText().trim();
         String address = addressField.getText().trim();
-
-        String emergencyContact =
-                emergencyContactField.getText().trim();
-
-        String emergencyPhone =
-                emergencyPhoneField.getText().trim();
-
-        // ===========================================
-        // Validation
-        // ===========================================
-
-        if (Validation.isEmpty(patientId)
-                || Validation.isEmpty(fullName)
-                || Validation.isEmpty(ageText)
-                || Validation.isEmpty(phone)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Please fill all required fields.");
-
+        String emergencyContact = emergencyContactField.getText().trim();
+        String emergencyPhone = emergencyPhoneField.getText().trim();
+        //validate
+        if (Validation.isEmpty(patientId) || Validation.isEmpty(fullName) || Validation.isEmpty(ageText) || Validation.isEmpty(phone)) {
+            MessageDialog.showError(this,"Please fill all required fields.");
             return;
         }
-
         int age;
-
-        try {
-
-            age = Integer.parseInt(ageText);
-
-        } catch (NumberFormatException ex) {
-
-            MessageDialog.showError(
-                    this,
-                    "Age must be numeric.");
-
+        try { age = Integer.parseInt(ageText);} 
+        catch (NumberFormatException ex) {
+            MessageDialog.showError(this,"Age must be numeric.");
             return;
-
         }
-
         if (!Validation.isValidAge(age)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Invalid age.");
-
+            MessageDialog.showError(this,"Invalid age.");
             return;
-
         }
-
         if (!Validation.isValidPhone(phone)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Invalid phone number.");
-
+            MessageDialog.showError(this,"Invalid phone number.");
             return;
-
         }
-
-        if (!email.isEmpty()
-                && !Validation.isValidEmail(email)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Invalid email address.");
-
+        if (!email.isEmpty() && !Validation.isValidEmail(email)) {
+            MessageDialog.showError(this,"Invalid email address.");
             return;
-
         }
-
-        // ===========================================
-        // Create Patient Object
-        // ===========================================
 
         Patient patient = new Patient(
-
                 patientId,
                 fullName,
                 age,
@@ -545,199 +297,84 @@ public class PatientPanel extends JPanel {
                 emergencyPhone,
                 disease,
                 ""
-
         );
 
-        // ===========================================
-        // Save Patient
-        // ===========================================
-
-        boolean added =
-                patientManager.addPatient(patient);
-
+        boolean added = patientManager.addPatient(patient);
         if (added) {
-
-            MessageDialog.showSuccess(
-                    this,
-                    "Patient added successfully.");
-
+            MessageDialog.showSuccess(this,"Patient added successfully.");
             clearForm();
-
             loadPatientTable();
-
         } else {
-
-            MessageDialog.showError(
-                    this,
-                    "Patient ID already exists.");
-
+            MessageDialog.showError(this,"Patient ID already exists.");
         }
-
     }
 
     private void updatePatient() {
-
         String patientId = patientIdField.getText().trim();
-
         if (Validation.isEmpty(patientId)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Enter Patient ID to update.");
-
+            MessageDialog.showError(this,"Enter Patient ID to update.");
             return;
-
         }
-
-        Patient existingPatient =
-                patientManager.getPatient(patientId);
-
+        Patient existingPatient = patientManager.getPatient(patientId);
         if (existingPatient == null) {
-
-            MessageDialog.showError(
-                    this,
-                    "Patient not found.");
-
+            MessageDialog.showError(this,"Patient not found.");
             return;
-
         }
-
         String fullName = patientNameField.getText().trim();
         String ageText = ageField.getText().trim();
-
         int age;
-
-        try {
-
-            age = Integer.parseInt(ageText);
-
-        } catch (NumberFormatException ex) {
-
-            MessageDialog.showError(
-                    this,
-                    "Age must be numeric.");
-
+        try {age = Integer.parseInt(ageText); } 
+        catch (NumberFormatException ex) {
+            MessageDialog.showError(this,"Age must be numeric.");
             return;
-
         }
-
         existingPatient.setFullName(fullName);
         existingPatient.setAge(age);
-        existingPatient.setGender(
-                genderComboBox.getSelectedItem().toString());
-
-        existingPatient.setBloodGroup(
-                bloodGroupComboBox.getSelectedItem().toString());
-
-        existingPatient.setCurrentDisease(
-                diseaseField.getText().trim());
-
-        existingPatient.setPhoneNumber(
-                phoneField.getText().trim());
-
-        existingPatient.setEmail(
-                emailField.getText().trim());
-
-        existingPatient.setAddress(
-                addressField.getText().trim());
-
-        existingPatient.setEmergencyContactName(
-                emergencyContactField.getText().trim());
-
-        existingPatient.setEmergencyContactPhone(
-                emergencyPhoneField.getText().trim());
-
+        existingPatient.setGender(genderComboBox.getSelectedItem().toString());
+        existingPatient.setBloodGroup(bloodGroupComboBox.getSelectedItem().toString());
+        existingPatient.setCurrentDisease(diseaseField.getText().trim());
+        existingPatient.setPhoneNumber(phoneField.getText().trim());
+        existingPatient.setEmail(emailField.getText().trim());
+        existingPatient.setAddress(addressField.getText().trim());
+        existingPatient.setEmergencyContactName(emergencyContactField.getText().trim());
+        existingPatient.setEmergencyContactPhone(emergencyPhoneField.getText().trim());
         if (patientManager.updatePatient(existingPatient)) {
-
-            MessageDialog.showSuccess(
-                    this,
-                    "Patient updated successfully.");
-
+            MessageDialog.showSuccess(this,"Patient updated successfully.");
             loadPatientTable();
-
             clearForm();
-
         } else {
-
-            MessageDialog.showError(
-                    this,
-                    "Unable to update patient.");
-
+            MessageDialog.showError(this,"Unable to update patient.");
         }
-
     }
-
     private void deletePatient() {
-
         String patientId = patientIdField.getText().trim();
-
         if (Validation.isEmpty(patientId)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Enter Patient ID to delete.");
-
-            return;
-
-        }
-
-        boolean confirm = MessageDialog.showConfirm(
-                this,
-                "Are you sure you want to delete this patient?");
-
-        if (!confirm) {
+            MessageDialog.showError(this,"Enter Patient ID to delete.");
             return;
         }
-
-        boolean deleted =
-                patientManager.deletePatient(patientId);
-
+        boolean confirm = MessageDialog.showConfirm(this,"Are you sure you want to delete this patient?");
+        if (!confirm) { return; }
+        boolean deleted = patientManager.deletePatient(patientId);
         if (deleted) {
-
-            MessageDialog.showSuccess(
-                    this,
-                    "Patient deleted successfully.");
-
+            MessageDialog.showSuccess(this, "Patient deleted successfully.");
             clearForm();
-
             loadPatientTable();
-
         } else {
-
-            MessageDialog.showError(
-                    this,
-                    "Patient not found.");
-
+            MessageDialog.showError(this,"Patient not found.");
         }
-
     }
 
     private void viewPatientDetails() {
-
         String patientId = patientIdField.getText().trim();
-
         if (Validation.isEmpty(patientId)) {
-
-            MessageDialog.showError(
-                    this,
-                    "Enter Patient ID.");
-
+            MessageDialog.showError(this,"Enter Patient ID.");
             return;
-
         }
-
         Patient patient = patientManager.getPatient(patientId);
-
         if (patient == null) {
-
-            MessageDialog.showError(
-                    this,
-                    "Patient not found.");
-
+            MessageDialog.showError(this,"Patient not found.");
             return;
-
         }
-
         String details =
                 "Patient ID : " + patient.getPatientId() +
                 "\nName : " + patient.getFullName() +
@@ -750,17 +387,10 @@ public class PatientPanel extends JPanel {
                 "\nAddress : " + patient.getAddress() +
                 "\nEmergency Contact : " + patient.getEmergencyContactName() +
                 "\nEmergency Phone : " + patient.getEmergencyContactPhone();
-
         MessageDialog.showInfo(this, details);
-
     }
 
-    // =====================================================
-    // Utility Methods
-    // =====================================================
-
     private void clearForm() {
-
         patientIdField.setText("");
         patientNameField.setText("");
         ageField.setText("");
@@ -770,20 +400,14 @@ public class PatientPanel extends JPanel {
         addressField.setText("");
         emergencyContactField.setText("");
         emergencyPhoneField.setText("");
-
         genderComboBox.setSelectedIndex(0);
         bloodGroupComboBox.setSelectedIndex(0);
-
         patientNameField.requestFocus();
-
         statusLabel.setText("Status : Form Cleared");
-
     }
 
     private void loadPatientTable() {
-
         String[] columns = {
-
                 "Patient ID",
                 "Name",
                 "Age",
@@ -791,18 +415,11 @@ public class PatientPanel extends JPanel {
                 "Blood Group",
                 "Disease",
                 "Phone"
-
         };
-
-        java.util.List<Patient> patients =
-                patientManager.getAllPatients();
-
+        java.util.List<Patient> patients = patientManager.getAllPatients();
         Object[][] data = new Object[patients.size()][7];
-
         for (int i = 0; i < patients.size(); i++) {
-
             Patient patient = patients.get(i);
-
             data[i][0] = patient.getPatientId();
             data[i][1] = patient.getFullName();
             data[i][2] = patient.getAge();
@@ -810,26 +427,11 @@ public class PatientPanel extends JPanel {
             data[i][4] = patient.getBloodGroup();
             data[i][5] = patient.getCurrentDisease();
             data[i][6] = patient.getPhoneNumber();
-
         }
-
         patientTable.setTableData(columns, data);
-
-        totalPatientsLabel.setText(
-                "Total Patients : " + patients.size());
-
-        statusLabel.setText(
-                "Status : " + patients.size() + " patient(s) loaded");
-
+        totalPatientsLabel.setText("Total Patients : " + patients.size());
+        statusLabel.setText("Status : " + patients.size() + " patient(s) loaded");
     }
 
-    public void updatePatientCount(int count) {
-
-        totalPatientsLabel.setText("Total Patients : " + count);
-
-    }
-
+    public void updatePatientCount(int count) { totalPatientsLabel.setText("Total Patients : " + count); }
 }
-
-
-
