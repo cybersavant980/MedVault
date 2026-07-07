@@ -4,6 +4,9 @@
 # data files
 *.dat
 
+# medical reports pdf
+*.pdf
+
 # VS Code
 .vscode/
 
