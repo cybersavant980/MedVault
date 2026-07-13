@@ -248,6 +248,7 @@ private void registerEvents() {
     private void loadPassportTable() {
         String[] columns = {"Passport ID","Patient ID","Blood Group","Height","Weight","Doctor","Doctor Contact"};
         java.util.List<HealthPassport> list = passportManager.getAllPassports();
+        list.sort(java.util.Comparator.comparing(HealthPassport::getPassportId));
         Object[][] data = new Object[list.size()][7];
         for (int i = 0; i < list.size(); i++) {
             HealthPassport passport = list.get(i);

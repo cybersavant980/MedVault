@@ -220,6 +220,7 @@ public class MedicinePanel extends JPanel {
     private void loadMedicineTable() {
         String[] columns = {"Medicine ID","Medicine Name","Dosage","Frequency","Expiry","Stock"};
         java.util.List<Medicine> medicines = medicineManager.getAllMedicines();
+        medicines.sort(java.util.Comparator.comparing(Medicine::getMedicineId));
         Object[][] data = new Object[medicines.size()][6];
         for (int i = 0; i < medicines.size(); i++) {
             Medicine medicine = medicines.get(i);

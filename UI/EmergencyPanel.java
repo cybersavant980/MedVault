@@ -203,6 +203,7 @@ public class EmergencyPanel extends JPanel {
     private void loadEmergencyTable() {
         String[] columns = {"Patient ID","Blood Group","Emergency Contact","Doctor","Doctor Contact"};
         java.util.List<Emergency> list = emergencyManager.getAllEmergencyRecords();
+        list.sort(java.util.Comparator.comparing(Emergency::getPatientId));
         Object[][] data = new Object[list.size()][5];
         for (int i = 0; i < list.size(); i++) {
             Emergency e = list.get(i);

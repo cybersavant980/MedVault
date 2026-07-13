@@ -408,6 +408,7 @@ public class PatientPanel extends JPanel {
                 "Phone"
         };
         java.util.List<Patient> patients = patientManager.getAllPatients();
+        patients.sort(java.util.Comparator.comparing(Patient::getPatientId));
         Object[][] data = new Object[patients.size()][7];
         for (int i = 0; i < patients.size(); i++) {
             Patient patient = patients.get(i);
