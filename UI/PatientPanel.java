@@ -11,7 +11,7 @@ import java.awt.*;
 public class PatientPanel extends JPanel {
     private JLabel titleLabel,subtitleLabel;
 
-    private RoundedTextField patientIdField,patientNameField,diseaseField,ageField,phoneField,emailField,addressField,emergencyContactField,emergencyPhoneField;
+    private RoundedTextField patientIdField,patientNameField,diseaseField,ageField,phoneField,emailField,addressField,emergencyContactField;
 
     private JComboBox<String> genderComboBox;
     private JComboBox<String> bloodGroupComboBox;
@@ -65,7 +65,6 @@ public class PatientPanel extends JPanel {
         emailField = new RoundedTextField(20);
         addressField = new RoundedTextField(20);
         emergencyContactField = new RoundedTextField(20);
-        emergencyPhoneField = new RoundedTextField(20);
         addButton = new RoundedButton("Add");
         updateButton = new RoundedButton("Update");
         deleteButton = new RoundedButton("Delete");
@@ -162,14 +161,12 @@ public class PatientPanel extends JPanel {
         gbc.gridx = 1;
         panel.add(new JLabel("Emergency Contact"), gbc);
         gbc.gridx = 2;
-        panel.add(new JLabel("Emergency Phone"), gbc);
         gbc.gridy++;
         gbc.gridx = 0;
         panel.add(addressField, gbc);
         gbc.gridx = 1;
         panel.add(emergencyContactField, gbc);
         gbc.gridx = 2;
-        panel.add(emergencyPhoneField, gbc);
         return panel;
     }
 
@@ -243,8 +240,7 @@ public class PatientPanel extends JPanel {
                 phoneField.setText(patient.getPhoneNumber());
                 emailField.setText(patient.getEmail());
                 addressField.setText(patient.getAddress());
-                emergencyContactField.setText(patient.getEmergencyContactName());
-                emergencyPhoneField.setText(patient.getEmergencyContactPhone());
+                emergencyContactField.setText(patient.getEmergencyContact());
         });
     }
 
@@ -259,7 +255,6 @@ public class PatientPanel extends JPanel {
         String email = emailField.getText().trim();
         String address = addressField.getText().trim();
         String emergencyContact = emergencyContactField.getText().trim();
-        String emergencyPhone = emergencyPhoneField.getText().trim();
         //validate
         if (Validation.isEmpty(patientId) || Validation.isEmpty(fullName) || Validation.isEmpty(ageText) || Validation.isEmpty(phone)) {
             MessageDialog.showError(this,"Please fill all required fields.");
@@ -294,7 +289,6 @@ public class PatientPanel extends JPanel {
                 email,
                 address,
                 emergencyContact,
-                emergencyPhone,
                 disease,
                 ""
         );
@@ -336,8 +330,7 @@ public class PatientPanel extends JPanel {
         existingPatient.setPhoneNumber(phoneField.getText().trim());
         existingPatient.setEmail(emailField.getText().trim());
         existingPatient.setAddress(addressField.getText().trim());
-        existingPatient.setEmergencyContactName(emergencyContactField.getText().trim());
-        existingPatient.setEmergencyContactPhone(emergencyPhoneField.getText().trim());
+        existingPatient.setEmergencyContact(emergencyContactField.getText().trim());
         if (patientManager.updatePatient(existingPatient)) {
             MessageDialog.showSuccess(this,"Patient updated successfully.");
             loadPatientTable();
@@ -385,8 +378,7 @@ public class PatientPanel extends JPanel {
                 "\nPhone : " + patient.getPhoneNumber() +
                 "\nEmail : " + patient.getEmail() +
                 "\nAddress : " + patient.getAddress() +
-                "\nEmergency Contact : " + patient.getEmergencyContactName() +
-                "\nEmergency Phone : " + patient.getEmergencyContactPhone();
+                "\nEmergency Contact : " + patient.getEmergencyContact();
         MessageDialog.showInfo(this, details);
     }
 
@@ -399,7 +391,6 @@ public class PatientPanel extends JPanel {
         emailField.setText("");
         addressField.setText("");
         emergencyContactField.setText("");
-        emergencyPhoneField.setText("");
         genderComboBox.setSelectedIndex(0);
         bloodGroupComboBox.setSelectedIndex(0);
         patientNameField.requestFocus();

@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 public class Patient implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String patientId,fullName,gender,bloodGroup,phoneNumber,email,address,emergencyContactName,emergencyContactPhone,currentDisease,allergies;
+    private String patientId,fullName,gender,bloodGroup,phoneNumber,email,address,emergencyContact,currentDisease,allergies;
     private int age;
     private LocalDate registrationDate;
     public Patient() { this.registrationDate = LocalDate.now(); }
-    public Patient(String patientId,String fullName,int age,String gender,String bloodGroup,String phoneNumber,String email,String address,String emergencyContactName,String emergencyContactPhone,String currentDisease,String allergies) {
+    public Patient(String patientId,String fullName,int age,String gender,String bloodGroup,String phoneNumber,String email,String address,String emergencyContact,String currentDisease,String allergies) {
         this.patientId = patientId;
         this.fullName = fullName;
         this.age = age;
@@ -17,8 +17,7 @@ public class Patient implements Serializable {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
-        this.emergencyContactName = emergencyContactName;
-        this.emergencyContactPhone = emergencyContactPhone;
+        this.emergencyContact = emergencyContact;
         this.currentDisease = currentDisease;
         this.allergies = allergies;
         this.registrationDate = LocalDate.now();
@@ -71,17 +70,11 @@ public class Patient implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
-    public String getEmergencyContactName() {
-        return emergencyContactName;
+    public String getEmergencyContact() {
+        return emergencyContact;
     }
-    public void setEmergencyContactName(String emergencyContactName) {
-        this.emergencyContactName = emergencyContactName;
-    }
-    public String getEmergencyContactPhone() {
-        return emergencyContactPhone;
-    }
-    public void setEmergencyContactPhone(String emergencyContactPhone) {
-        this.emergencyContactPhone = emergencyContactPhone;
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
     }
     public String getCurrentDisease() {
         return currentDisease;
